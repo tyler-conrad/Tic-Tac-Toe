@@ -1,0 +1,157 @@
+#:import Image kivy.core.image.Image
+
+#:import new_game client.controller.game.new_game
+#:import init_board client.controller.game.init_board
+#:import quit_game client.controller.game.quit_game
+#:import game client.model.game
+
+<Widget>:
+    font_size: '40dp'
+
+<FramePadding@BoxLayout>:
+    padding: '80dp'
+
+<ButtonPadding@BoxLayout>:
+    padding: '80dp', '10dp'
+
+<MenuScreen@Screen>:
+    canvas:
+        Color:
+            rgba: 1.0, 1.0, 1.0, 1.0
+        BorderImage:
+            pos: self.pos
+            size: self.size
+            border: 24, 24, 24, 24
+            texture: Image('atlas://data/images/defaulttheme/player-background').texture
+
+ScreenManager:
+    id: screen_manager
+    cls: ['screen_manager']
+
+    MenuScreen:
+        name: 'title_screen'
+
+        FramePadding:
+            orientation: 'vertical'
+
+            Label:
+                text: 'Tic-Tac-Toe'
+
+            ButtonPadding:
+                Button:
+                    text: 'Setup'
+                    on_press: screen_manager.current = 'setup_screen'
+
+    MenuScreen:
+        name: 'setup_screen'
+
+        FramePadding:
+            orientation: 'vertical'
+
+            Label:
+                text: 'Board Size'
+
+            BoxLayout:
+                size_hint_y: 2.0
+                padding: '120dp', '20dp'
+                orientation: 'horizontal'
+
+                RadioToggleButton:
+                    group: 'board_size'
+                    text: '2'
+
+                RadioToggleButton:
+                    group: 'board_size'
+                    text: '3'
+                    state: 'down'
+
+                RadioToggleButton:
+                    group: 'board_size'
+                    text: '4'
+
+                RadioToggleButton:
+                    group: 'board_size'
+                    text: '5'
+
+                RadioToggleButton:
+                    group: 'board_size'
+                    text: '6'
+
+                RadioToggleButton:
+                    group: 'board_size'
+                    text: '7'
+
+                RadioToggleButton:
+                    group: 'board_size'
+                    text: '8'
+
+            ButtonPadding:
+                ToggleButton:
+                    cls: ['play_first_toggle']
+                    text: 'Play First'
+
+            ButtonPadding:
+                Button:
+                    text: 'Play!'
+                    on_press: new_game()
+
+    BoardScreen:
+        name: 'board_screen'
+        cls: ['board_screen']
+        on_enter: init_board()
+
+<GameOverPopup>:
+    id: game_over_popup
+    auto_dismiss: False
+    size_hint_x: 0.8
+    size_hint_y: 0.8
+
+    BoxLayout:
+        padding: '20dp'
+        orientation: 'vertical'
+
+        Label:
+            font_size: '30dp'
+            text: 'Game Over: ' + root.title
+
+        BoxLayout:
+            orientation: 'vertical'
+
+            BoxLayout:
+                orientation: 'horizontal'
+
+                Label:
+                    text: 'Wins'
+
+                Label:
+                    text: 'Draws'
+
+                Label:
+                    text: 'Losses'
+
+            BoxLayout:
+                orientation: 'horizontal'
+
+                Label:
+                    text: str(game.wins)
+
+                Label:
+                    text: str(game.draws)
+
+                Label:
+                    text: str(game.losses)
+
+        BoxLayout:
+            orientation: 'horizontal'
+
+            ButtonPadding:
+                Button:
+                    text: 'Play Again'
+                    on_press: root.close()
+
+                Button:
+                    text: 'Quit'
+                    on_press: quit_game()
+
+<CellWidget>
+    font_size: self.height
